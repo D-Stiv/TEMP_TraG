@@ -1,0 +1,7 @@
+{
+  "paths": {
+    "dataset": "path to directory for datasets", 
+    "model_to_load": "path to directory of model checkpoints",
+    "model_to_save": "path to directory of model checkpoints"
+  }
+}

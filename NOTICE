@@ -1,0 +1,21 @@
+This repository includes modified source code from PyTorch Geometric and MEGA-GNN.
+
+## PyTorch Geometric
+Copyright (c) 2023 PyG Team <team@pyg.org>
+Licensed under the MIT License
+
+The following files are derivative works of PyTorch Geometric and remain licensed under MIT:
+- modif_gnn/gin.py.py
+- modif_gnn/pna.py
+
+## MEGA-GNN
+Copyright [yyyy] [name of copyright owner]
+Licensed under the Apache License, Version 2.0
+
+The following files are derivative works of MEGA-GNN and remain licensed under Apache 2.0:
+- load_data.py
+- load_data_multi.py
+- models.py
+- training_node.py
+- training_edge.py
+
