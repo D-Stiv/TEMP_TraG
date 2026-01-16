@@ -38,17 +38,6 @@ import math
 import time
 
 
-class Identity(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super(Identity, self).__init__()
-
-    def forward(self, input):
-        return input
-
-    def reset_parameters(self):
-        pass
-
-
 
 class MultiMPNN(torch.nn.Module):
     def __init__(self, num_features, num_gnn_layers, n_classes=2, n_hidden=100, 
@@ -134,18 +123,4 @@ class MultiMPNN(torch.nn.Module):
                 out = self.mlp(x)
         return out
     
-
-
-
-# backbone GNN model for node and edge embeddings
-class GnnHelper(torch.nn.Module):
-    def __init__(self, num_gnn_layers, n_hidden=100, edge_updates=False, 
-                final_dropout=0.5, index_ = None, deg = None, args=None):
-        super().__init__()
-
-        pass
-               
-
-    def forward(self, x, edge_index, edge_attr, simp_edge_batch=None):
-        pass
 

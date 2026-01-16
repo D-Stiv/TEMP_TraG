@@ -32,7 +32,7 @@ from sklearn.linear_model import SGDOneClassSVM
 from train_util import allrules, rulerefinement, addsplitnodes_vec
 from tqdm import tqdm
 
-def get_data(args, config):
+def get_edge_data(args, config):
     '''Loads the AML transaction data.
     
     1. The data is loaded from the csv and the necessary features are chosen.
@@ -221,7 +221,7 @@ def get_data(args, config):
     return tr_data, val_data, te_data, tr_inds, val_inds, te_inds
 
 
-def get_node_classification_data(args, config):
+def get_node_data(args, config):
     '''Loads the Node Classification data.
     
     1. The data is loaded from the csv and the necessary features are chosen.

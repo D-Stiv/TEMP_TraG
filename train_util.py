@@ -1,3 +1,10 @@
+# MIT License
+#
+# Copyright (c) 2026 D-Stiv
+#
+# See the LICENSE file in the repository root for full license text.
+
+
 import torch
 import tqdm
 import pandas as pd
@@ -11,48 +18,6 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import SGDOneClassSVM
 from sklearn.pipeline import make_pipeline
 import numpy as np
-
-
-
-def compute_binary_metrics(preds: np.array, labels: np.array):
-    """
-    Computes metrics based on raw/normalized model predictions.
-    :param preds: Raw (or normalized) predictions (can vary threshold here if raw scores are provided)
-    :param labels: Binary target labels
-    :return: Dictionary containing accuracy, precision, recall, F1-score (per class and macro avg), and ROC AUC scores.
-    """
-    probs = preds[:, 1]  # Probability for the positive class
-    preds = preds.argmax(axis=-1)
-    
-    # Compute precision-recall curve & AUC
-    precisions, recalls, _ = sklearn.metrics.precision_recall_curve(labels, probs)
-    auc = sklearn.metrics.auc(recalls, precisions)
-    
-    # Compute per-class precision, recall, and F1-score
-    precision_per_class = sklearn.metrics.precision_score(labels, preds, average=None, zero_division=0)
-    recall_per_class = sklearn.metrics.recall_score(labels, preds, average=None, zero_division=0)
-    f1_per_class = sklearn.metrics.f1_score(labels, preds, average=None, zero_division=0)
-    
-    # Compute macro-average scores
-    precision_macro = sklearn.metrics.precision_score(labels, preds, average='macro', zero_division=0)
-    recall_macro = sklearn.metrics.recall_score(labels, preds, average='macro', zero_division=0)
-    f1_macro = sklearn.metrics.f1_score(labels, preds, average='macro', zero_division=0)
-    confusion_matrix = sklearn.metrics.confusion_matrix(labels, preds)
-    
-    # Compute accuracy
-    accuracy = sklearn.metrics.accuracy_score(labels, preds)
-    
-    return {
-        "accuracy": accuracy,
-        "precision_per_class": precision_per_class,
-        "recall_per_class": recall_per_class,
-        "f1_per_class": f1_per_class,
-        "precision_macro": precision_macro,
-        "recall_macro": recall_macro,
-        "f1_macro": f1_macro,
-        "pr_auc": auc,
-        'confusion_matrix': confusion_matrix
-    }
 
 
 def temp_aware_edge_clust(edge_df, datetime_col, src_col, dst_col, timestamp_col):
@@ -208,41 +173,6 @@ def create_dgl_graph(tr_x, tr_edge_index, tr_edge_attr, tr_y,
     return g
 
 
-
-def identify_dense_regions_with_hdbscan(data, min_cluster_size=10, min_samples=10):
-    """
-    Identifies dense regions in a dataset using HDBSCAN and calculates the median value for each region.
-
-    Args:
-        data: A 1D NumPy array containing the data.
-        min_cluster_size: The minimum size of clusters.
-        min_samples: The minimum number of samples in a neighborhood for a point to be considered as a core point.
-
-    Returns:
-        A list of median values for each dense region.
-    """
-
-    import hdbscan
-
-    # Reshape the data into a 2D array for HDBSCAN
-    data = data.reshape(-1, 1)
-
-    # Perform HDBSCAN clustering
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, min_samples=min_samples)
-    clusterer.fit(data)
-
-    # Extract dense regions (clusters) and calculate medians
-    labels = clusterer.labels_
-    unique_labels = set(labels)
-    medians = []
-    for label in unique_labels:
-        if label == -1:  # Noise points
-            continue
-        class_member_mask = (labels == label)
-        cluster_data = data[class_member_mask].ravel()
-        medians.append(np.median(cluster_data))
-
-    return medians
 
 def rulerefinement(decisions, median_threshold=1):
     # dicdec = {} 
@@ -458,72 +388,6 @@ def substitute_features(g, node_features):
     te_x_new = te_feats
 
     return tr_x_new, val_x_new, te_x_new
-
-
-@torch.no_grad()
-def evaluate_hetero(loader, inds, model, data, device, args):
-    '''Evaluates the model performane for heterogenous graph data.'''
-    model.eval()
-    assert not model.training, "Test error: Model is not in evaluation mode"
-
-    preds = []
-    ground_truths = []
-    for batch in tqdm.tqdm(loader, disable=not args.tqdm):
-        #select the seed edges from which the batch was created
-        
-        if args.ports and args.ports_batch:
-            # To be consistent, sample the edges for forward and backward edge types.
-            assign_ports_with_cpp(batch) 
-    
-        inds = inds.detach().cpu()
-        batch_edge_inds = inds[batch['node', 'to', 'node'].input_id.detach().cpu()]
-        batch_edge_ids = loader.data['node', 'to', 'node'].edge_attr.detach().cpu()[batch_edge_inds, 0]
-        mask = torch.isin(batch['node', 'to', 'node'].edge_attr[:, 0].detach().cpu(), batch_edge_ids)
-
-        #add the seed edges that have not been sampled to the batch
-        missing = ~torch.isin(batch_edge_ids, batch['node', 'to', 'node'].edge_attr[:, 0].detach().cpu())
-
-        if missing.sum() != 0 and (args.data == 'Small_J' or args.data == 'Small_Q'):
-            # Just ignore this part we rae not entering here args.data == "Small_HI"
-            missing_ids = batch_edge_ids[missing].int()
-            n_ids = batch['node'].n_id
-            add_edge_index = data['node', 'to', 'node'].edge_index[:, missing_ids].detach().clone()
-            node_mapping = {value.item(): idx for idx, value in enumerate(n_ids)}
-            add_edge_index = torch.tensor([[node_mapping[val.item()] for val in row] for row in add_edge_index])
-            add_edge_attr = data['node', 'to', 'node'].edge_attr[missing_ids, :].detach().clone()
-            add_y = data['node', 'to', 'node'].y[missing_ids].detach().clone()
-        
-            batch['node', 'to', 'node'].edge_index = torch.cat((batch['node', 'to', 'node'].edge_index, add_edge_index), 1)
-            batch['node', 'to', 'node'].edge_attr = torch.cat((batch['node', 'to', 'node'].edge_attr, add_edge_attr), 0)
-            batch['node', 'to', 'node'].y = torch.cat((batch['node', 'to', 'node'].y, add_y), 0)
-
-            mask = torch.cat((mask, torch.ones(add_y.shape[0], dtype=torch.bool)))
-
-        #remove the unique edge id from the edge features, as it's no longer needed
-        batch['node', 'to', 'node'].edge_attr = batch['node', 'to', 'node'].edge_attr[:, 1:]
-        batch['node', 'rev_to', 'node'].edge_attr = batch['node', 'rev_to', 'node'].edge_attr[:, 1:]
-        
-        with torch.no_grad():
-            batch.to(device)
-
-            out = model(batch)
-                
-            out = out[mask]
-            pred = out
-
-            preds.append(pred.detach().cpu())
-            ground_truths.append(batch['node', 'to', 'node'].y[mask].detach().cpu())
-
-    pred = torch.cat(preds, dim=0).numpy()
-    ground_truth = torch.cat(ground_truths, dim=0).numpy()
-
-    # Compute Metrics
-    # f1, auc, precision, recall = compute_binary_metrics(pred, ground_truth)
-    metrics = compute_binary_metrics(pred, ground_truth)
-
-
-    model.train()
-    return metrics # f1, auc, precision, recall
 
 
 def save_model(model, optimizer, epoch):
