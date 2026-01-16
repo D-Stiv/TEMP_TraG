@@ -15,6 +15,7 @@
 # ----
 # Modifications:
 # - Integrated temporal feature extraction and symbolic rule generation
+# - temporal_feature_extraction, detect_outliers, extract_outliers, compute_rule_vectors, create_dgl_graph, create_symbolic_rules, substitute_features
 #
 # Modifications Copyright (c) 2026 D-Stiv
 

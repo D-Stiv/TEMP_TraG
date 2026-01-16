@@ -23,6 +23,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+# 
+# ----
+# Modifications points:
+# - inserted weight decay
+# - PNAConv message function modified to include temporal decay
+
 
 
 from typing import Any, Callable, Dict, List, Optional, Union

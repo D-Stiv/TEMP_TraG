@@ -15,7 +15,7 @@
 # ----
 # Modifications:
 # - Adapted training process to edge classification.
-# - Inserted early stopping and metrics computation
+# - Inserted early stopping and metrics computation (train_hetero function).
 #
 # Modifications Copyright (c) 2026 D-Stiv
 

@@ -79,6 +79,9 @@ This repository contains code under **multiple licenses**.
 All original code written by the author of this repository is
 licensed under the MIT License (see `LICENSE`).
 
+The following file is derivative works of PyTorch Geometric and remain licensed under MIT:
+- modif_gnn/pna.py
+
 ### Apache License 2.0
 This repository includes modified source code from
 **PyTorch Geometric**, licensed under the Apache License 2.0.

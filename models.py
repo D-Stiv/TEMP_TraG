@@ -15,6 +15,7 @@
 # ----
 # Modifications:
 # - Integrated timestamp information into edge features for temporal message passing.
+# - MultiMPNN forward method.
 #
 # Modifications Copyright (c) 2026 D-Stiv
 
@@ -34,8 +35,6 @@ from torch_scatter import scatter
 from torch_geometric.utils import degree
 from genagg import GenAgg
 from genagg.MLPAutoencoder import MLPAutoencoder
-import math 
-import time
 
 
 

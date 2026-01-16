@@ -4,8 +4,7 @@ This repository includes modified source code from PyTorch Geometric and MEGA-GN
 Copyright (c) 2023 PyG Team <team@pyg.org>
 Licensed under the MIT License
 
-The following files are derivative works of PyTorch Geometric and remain licensed under MIT:
-- modif_gnn/gin.py.py
+The following file is derivative works of PyTorch Geometric and remain licensed under MIT:
 - modif_gnn/pna.py
 
 ## MEGA-GNN

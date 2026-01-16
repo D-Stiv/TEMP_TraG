@@ -14,7 +14,7 @@
 #
 # ----
 # Modifications:
-# - Inserted early stopping and metrics computation
+# - Inserted early stopping and metrics computation (train_hetero_eth function).
 #
 # Modifications Copyright (c) 2026 D-Stiv
 
