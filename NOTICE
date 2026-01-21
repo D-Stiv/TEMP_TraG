@@ -1,0 +1,24 @@
+This repository includes modified source code from PyTorch Geometric and MEGA-GNN.
+
+## PyTorch Geometric
+Copyright (c) 2023 PyG Team <team@pyg.org>
+Licensed under the MIT License
+
+The following file is derivative works of PyTorch Geometric and remain licensed under MIT:
+- pna.py
+
+## MEGA-GNN
+Copyright [yyyy] [name of copyright owner]
+Licensed under the Apache License, Version 2.0
+
+The following files are derivative works from ```MEGA-GNN``` (Multigraph Message Passing with Bi-Directional Multi-Edge Aggregations, Bilgi et al.) and remain licensed under Apache 2.0:
+- ``load_data.py``: we integrated temporal feature extraction and symbolic rule generation (temporal_feature_extraction, detect_outliers, extract_outliers, compute_rule_vectors, create_dgl_graph, create_symbolic_rules, substitute_features)
+- ``models.py``: we incorporated timestamp information into edge features for temporal message passing.
+- ``train_utils``.py: we computed new metrics for model evaluation
+- ``training_node.py``: we inserted a mechanism to monito the best model based on validation perfprmance
+- ``training_edge``.py: we inserted a mechanism to monito the best model based on validation perfprmance
+
+The content of the ``data_util`` is taken from ```MEGA-GNN```. We selected relevant modules and did not insert any own content. They remain licensed under Apache 2.0
+
+
+The modifications are indicated in the header of each file.
