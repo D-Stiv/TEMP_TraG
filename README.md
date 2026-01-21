@@ -63,6 +63,8 @@ Apache 2.0:
 - ``training_edge``.py: we inserted a mechanism to monito the best model based on validation perfprmance
 
 The content of ``data_util.py`` is taken from ```MEGA-GNN```. We selected relevant modules and did not insert any own content. They remain licensed under Apache 2.0
+
+
 The modifications are indicated in the header of each file.
 
 See `LICENSE-APACHE` and `NOTICE` for details.
